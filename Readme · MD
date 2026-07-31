@@ -30,17 +30,22 @@ its built-in fallback content instead of live data from the database.
 
 ## 2. Deploy
 
-Any static host works. Two easy options:
-
-### Option A — Render Static Site (free)
-1. [render.com](https://render.com) → **New → Static Site** → connect this repo.
-2. **Build Command:** leave blank. **Publish Directory:** `.`
-3. Deploy. Render gives you a URL like `https://koradiya-group-impex.onrender.com`.
+### Option A — Render Web Service (what `kgi-frontend-1` is running on)
+1. [render.com](https://render.com) → **New → Web Service** → connect this repo.
+2. Render auto-detects Node from `package.json`:
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+3. Deploy. You get a URL like `https://kgi-frontend-1.onrender.com`.
 4. Every push to your connected branch redeploys automatically.
 
-### Option B — Netlify / Vercel / Cloudflare Pages / GitHub Pages
-All of these work the same way for a single static HTML file: connect the
-repo, no build command, publish directory `.` (or `/`).
+`server.js` in this repo does nothing but serve `index.html` — no auth, no
+extra routes. It exists only because a Render **Web Service** needs a
+process listening on a port; a static file alone won't start one.
+
+### Option B — Render Static Site / Netlify / Vercel / Cloudflare Pages / GitHub Pages
+If you'd rather not run a server process at all, any of these host
+`index.html` directly with no build command and publish directory `.` —
+`server.js`/`package.json` simply aren't used in that case.
 
 ## What updates automatically vs. what needs a redeploy
 
