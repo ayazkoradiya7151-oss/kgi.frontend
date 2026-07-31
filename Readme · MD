@@ -1,0 +1,60 @@
+# Koradiya Group IMPEX — Public Website (Frontend Repo)
+
+This repo contains **one file**, `index.html` — the public Koradiya Group IMPEX
+site. It's a static page: no server, no build step. In the browser it reads
+its text, images, products and every **E-Catalogue** entry directly from
+Supabase (the same database the private admin repo writes to).
+
+This repo is meant to be **public**. It's safe to be public — the only key
+embedded in it is the Supabase **anon public** key, which is designed to be
+exposed in browsers; your actual data stays protected by Row Level Security
+rules defined in the backend repo's `schema.sql`, not by hiding this key.
+
+## 1. Connect it to your Supabase project
+
+1. Open `index.html` in a text editor.
+2. Near the top of `<head>`, find:
+   ```html
+   window.SUPABASE_CONFIG = {
+     url: "",
+     anonKey: ""
+   };
+   ```
+3. Fill in your Supabase **Project URL** and **anon public** key
+   (Supabase dashboard → Project Settings → API). These come from the same
+   Supabase project the backend repo's `schema.sql` was run in.
+4. Commit and push.
+
+If you leave `SUPABASE_CONFIG` blank, the page still works — it just shows
+its built-in fallback content instead of live data from the database.
+
+## 2. Deploy
+
+Any static host works. Two easy options:
+
+### Option A — Render Static Site (free)
+1. [render.com](https://render.com) → **New → Static Site** → connect this repo.
+2. **Build Command:** leave blank. **Publish Directory:** `.`
+3. Deploy. Render gives you a URL like `https://koradiya-group-impex.onrender.com`.
+4. Every push to your connected branch redeploys automatically.
+
+### Option B — Netlify / Vercel / Cloudflare Pages / GitHub Pages
+All of these work the same way for a single static HTML file: connect the
+repo, no build command, publish directory `.` (or `/`).
+
+## What updates automatically vs. what needs a redeploy
+
+- **Automatic, no redeploy** — anything edited in the admin backend (page
+  text, images, products, **E-Catalogue** names/categories/PDFs, contact
+  email): these all live in Supabase and the page fetches them fresh on
+  every load.
+- **Needs a redeploy** — only the one-time `SUPABASE_CONFIG` connection
+  above, or any structural change to `index.html` itself.
+
+## Where everything else lives
+
+- The **backoffice/admin app** (`admin.html`) and the **database schema**
+  (`schema.sql`) live in the separate **private** backend repo — they're
+  not in this repo on purpose, since the admin app is how someone edits
+  the live site and shouldn't be public.
+- The **database** itself is Supabase — not hosted in either repo.
